@@ -1,4 +1,4 @@
-// TASK #1
+// https://leetcode.com/problems/valid-palindrome/
 var isPalindrome = function (s) {
     let isPalyndrom = true;
     s = s.replace(/[\W_]+/gm, '').toLowerCase();
@@ -16,4 +16,3 @@ var isPalindrome = function (s) {
 };
 
 isPalindrome('race a car');
-// END TASK #1

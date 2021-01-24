@@ -1,4 +1,4 @@
-// TASK #2
+// https://leetcode.com/problems/valid-parentheses/
 var isValid = function (s) {
     let regExpValue = /\[\]|\{\}|\(\)/;
     while (s.match(regExpValue)) {
@@ -6,7 +6,9 @@ var isValid = function (s) {
     }
     return s ? false : true;
 };
-// END TASK #2
+
+
+
 
 
 
