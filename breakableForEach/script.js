@@ -1,22 +1,22 @@
-const arr = [-1, 0, 1, 1.5 ,2, 3, 4];
-let breakFlag = false;
+const arr = [-1, 0, 1, 1.5, 2, 3, 4];
+
 function breakableForEach(array, callback) {
-	for(let index = 0; index <= array.length; index++) {
-    callback(array[index], breakFn);
-    if (breakFlag) {
-      break;
+  let breakFlag = false;
+  function breakFn() {
+    breakFlag = true;
+  };
+  for (let index = 0; index <= array.length; index++) {
+    if (!breakFlag) {
+      callback(array[index], breakFn);
     }
   }
 }
 
 function loopFunction(val, breakFunction) {
-  	if (val >= 2) {
-  		breakFunction();
-  	}
+  console.log(val);
+  if (val >= 2) {
+    breakFunction();
+  }
 }
-
-function breakFn() {
-  breakFlag = true;
-};
 
 breakableForEach(arr, loopFunction);
