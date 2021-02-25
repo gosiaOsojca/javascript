@@ -1,6 +1,11 @@
 let itemsArray = [];
 let listItem;
 
+/**
+ * This function creates list item
+ * with the corresponding span.
+ * @param {string} inputValue
+ */
 function createListItem(inputValue) {
   listItem = document.createElement('li');
   listItem.className = 'list__item';
@@ -11,6 +16,10 @@ function createListItem(inputValue) {
   listItem.appendChild(itemSpan);
 }
 
+/**
+ * This function creates delete button
+ * and appends it to created list item.
+ */
 function createDeleteButton() {
   let closeButton = document.createElement('SPAN');
   let closeButtonNode = document.createTextNode('x');
@@ -20,17 +29,31 @@ function createDeleteButton() {
   return closeButton;
 }
 
+/**
+ * This function adds all saved items
+ * to local storage.
+ * @param {string} inputValue
+ */
 function addToLocalStorage(inputValue) {
   itemsArray.push(inputValue);
   localStorage.setItem('items', JSON.stringify(itemsArray));
 }
 
+/**
+ * This function updates the content of local
+ * storage after removing single item.
+ * @param {*} eventTarget
+ */
 function removeFromLocalStorage(eventTarget) {
   let index = itemsArray.indexOf(eventTarget);
   itemsArray.splice(index, 1);
   localStorage.setItem('items', JSON.stringify(itemsArray));
 }
 
+/**
+ * This function handles delete button actions.
+ * @param {*} button
+ */
 function deleteButton(button) {
   button.addEventListener('click', function (e) {
     e.target.parentElement.remove();
@@ -41,7 +64,9 @@ function deleteButton(button) {
   }, false);
 }
 
-
+/**
+ * This function adds new created item to the list.
+ */
 function addItem() {
   let inputValue = document.getElementById('input').value;
   createListItem(inputValue);
@@ -56,6 +81,10 @@ function addItem() {
   }
 }
 
+/**
+ * This function handles the status of save button.
+ * @param {*} e
+ */
 function changeButton(e) {
   e.target.classList.toggle('save-button--clicked');
 }
@@ -87,6 +116,10 @@ saveButton.addEventListener('click', function (e) {
   }
 }, false);
 
+/**
+ * Ths=is function updates the DOM contnent
+ * after the page reload.
+ */
 function updateDom() {
   let storageItems = localStorage.getItem('items');
   storageItems = JSON.parse(storageItems);
