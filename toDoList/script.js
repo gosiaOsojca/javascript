@@ -1,45 +1,64 @@
-function addItem() {
-  let listItem = document.createElement('li');
+let itemsArray = [];
+let listItem;
+
+function createListItem(inputValue) {
+  listItem = document.createElement('li');
   listItem.className = 'list__item';
   let itemSpan = document.createElement('SPAN');
   itemSpan.className = 'list__item-span'
-  let inputValue = document.getElementById('input').value;
   let textNode = document.createTextNode(inputValue);
   itemSpan.appendChild(textNode);
   listItem.appendChild(itemSpan);
+}
 
-  inputValue ? document.getElementById('list').appendChild(listItem) : alert("Fill the field");
-
-  document.getElementById('input').value = '';
-
+function createDeleteButton() {
   let closeButton = document.createElement('SPAN');
   let closeButtonNode = document.createTextNode('x');
   closeButton.className = 'close';
   closeButton.appendChild(closeButtonNode);
   listItem.appendChild(closeButton);
+  return closeButton;
+}
 
-  let closeButtons = document.getElementsByClassName('close');
-  for (button of closeButtons) {
-    button.addEventListener('click', function () {
-      this.parentElement.style.display = 'none';
-      if (saveButton.classList.contains('save-button--clicked')) {
-        localStorage.removeItem();
-        storageItemIndex--;
-      }
-    }, false);
-  }
+function addToLocalStorage(inputValue) {
+  itemsArray.push(inputValue);
+  localStorage.setItem('items', JSON.stringify(itemsArray));
+}
 
-  if(saveButton.classList.contains('save-button--clicked')) {
-    localStorage.setItem(`item${storageItemIndex++}`, inputValue);
+function removeFromLocalStorage(eventTarget) {
+  let index = itemsArray.indexOf(eventTarget);
+  itemsArray.splice(index, 1);
+  localStorage.setItem('items', JSON.stringify(itemsArray));
+}
+
+function deleteButton(button) {
+  button.addEventListener('click', function (e) {
+    e.target.parentElement.remove();
+
+    if (saveButton.classList.contains('save-button--clicked')) {
+      removeFromLocalStorage(e.target.previousSibling.textContent);
+    }
+  }, false);
+}
+
+
+function addItem() {
+  let inputValue = document.getElementById('input').value;
+  createListItem(inputValue);
+  inputValue ? document.getElementById('list').appendChild(listItem) : alert("Fill the field");
+  document.getElementById('input').value = '';
+
+  let closeButton = createDeleteButton();
+  deleteButton(closeButton);
+
+  if (saveButton.classList.contains('save-button--clicked')) {
+    addToLocalStorage(inputValue);
   }
 }
 
-function changeButton() {
-  this.classList.toggle('save-button--clicked');
+function changeButton(e) {
+  e.target.classList.toggle('save-button--clicked');
 }
-
-
-let storageItemIndex = 0;
 
 let addButton = document.getElementById('addButton');
 addButton.addEventListener('click', addItem, false);
@@ -54,16 +73,34 @@ list.addEventListener('click', function (e) {
 let saveButton = document.getElementById('saveButton');
 saveButton.addEventListener('click', changeButton, false);
 
-
-saveButton.addEventListener('click', function () {
-  if (this.classList.contains('save-button--clicked')) {
+saveButton.addEventListener('click', function (e) {
+  if (e.target.classList.contains('save-button--clicked')) {
     let listItems = document.getElementsByClassName('list__item-span');
+
     for (item of listItems) {
-      localStorage.setItem(`item${storageItemIndex++}`, item.textContent);
+      itemsArray.push(item.textContent);
     }
+    localStorage.setItem('items', JSON.stringify(itemsArray));
   } else {
-    localStorage.clear();
-    storageItemIndex = 0;
+    localStorage.removeItem('items');
+    itemsArray = [];
   }
 }, false);
 
+function updateDom() {
+  let storageItems = localStorage.getItem('items');
+  storageItems = JSON.parse(storageItems);
+
+  for (item of storageItems) {
+    createListItem(item);
+    document.getElementById('list').appendChild(listItem);
+    let closeButton = createDeleteButton();
+    deleteButton(closeButton);
+
+    if (saveButton.classList.contains('save-button--clicked')) {
+      addToLocalStorage(item);
+    }
+  }
+}
+
+window.onload = updateDom();
